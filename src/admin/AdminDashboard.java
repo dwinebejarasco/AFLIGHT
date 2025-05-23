@@ -291,6 +291,11 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel19.setForeground(new java.awt.Color(0, 102, 102));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("ViewFlights");
+        jLabel19.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel19MouseClicked(evt);
+            }
+        });
         users5.add(jLabel19);
         jLabel19.setBounds(0, 10, 160, 50);
 
@@ -414,9 +419,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_users3MouseExited
 
     private void users5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users5MouseClicked
-        FlightForm PF = new FlightForm();
-        PF.setVisible(true);
-        this.dispose();
+      
     }//GEN-LAST:event_users5MouseClicked
 
     private void users5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users5MouseEntered
@@ -426,6 +429,12 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void users5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users5MouseExited
         users5.setBackground(d);
     }//GEN-LAST:event_users5MouseExited
+
+    private void jLabel19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MouseClicked
+        FlightForm PF = new FlightForm();
+        PF.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel19MouseClicked
 
     /**
      * @param args the command line arguments

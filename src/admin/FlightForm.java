@@ -36,9 +36,9 @@ public class FlightForm extends javax.swing.JFrame {
         dbConnect dbc = new dbConnect();
 
         // Query to fetch relevant columns from 'parking_transactions' table
-        ResultSet rs = dbc.getData("SELECT id, u_id, vehicle_type, payment, " +
+        ResultSet rs = dbc.getData("SELECT id, u_id, Departure,Arrival, payment, " +
                                    "CONCAT(date, ' ', time) AS datetime, status " +
-                                   "FROM parking_transactions");
+                                   "FROM flights");
 
         // Assuming your JTable is named 'tblparking'
         tblparking.setModel(DbUtils.resultSetToTableModel(rs));
@@ -65,13 +65,13 @@ public void tableChanged(TableModelEvent e) {
 
     // Set column headers for parking_transactions table
     String[] columnNames = {
-        "id", "u_id", "vehicle_type", "payment",
+        "id", "u_id", "Departure","Arrival", "payment",
         "date", "time", "status"
     };
     model.setColumnIdentifiers(columnNames);
     model.setRowCount(0); // Clear table
 
-    String sql = "SELECT id, u_id, vehicle_type, payment, date, time, status FROM parking_transactions";
+    String sql = "SELECT id, u_id, Departure, Arrival,payment, date, time, status FROM flight";
 
     try (Connection connect = new dbConnect().getConnection();
          PreparedStatement pst = connect.prepareStatement(sql);
@@ -81,7 +81,8 @@ public void tableChanged(TableModelEvent e) {
             Object[] row = {
                 rs.getInt("id"),
                 rs.getInt("u_id"),
-                rs.getString("vehicle_type"),
+                rs.getString("Departure"),
+                rs.getString("Arrival"),
                 rs.getString("payment"),
                 rs.getDate("date"),
                 rs.getTime("time"),
@@ -120,9 +121,9 @@ private void loadParkingTransactionsData() {
     DefaultTableModel model = (DefaultTableModel) tblparking.getModel();  // Assuming 'tblblotter' is your JTable for parking transactions
     model.setRowCount(0); // Clear the table before reloading
 
-    String sql = "SELECT id, u_id, vehicle_type, payment, date, time, status FROM parking_transactions";
+    String sql = "SELECT id, u_id, Departure, Arrival,payment, date, time, status FROM flight";
 
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "");
+    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/flights", "root", "");
          PreparedStatement pst = con.prepareStatement(sql);
          ResultSet rs = pst.executeQuery()) {
 
@@ -131,7 +132,8 @@ private void loadParkingTransactionsData() {
             model.addRow(new Object[] {
                 rs.getInt("id"),
                 rs.getInt("u_id"),
-                rs.getString("vehicle_type"),
+                 rs.getString("Departure"),
+                rs.getString("Arrival"),
                 rs.getString("payment"),
                 rs.getDate("date"),
                 rs.getTime("time"),
@@ -208,28 +210,28 @@ private void loadParkingTransactionsData() {
          int selectedRow = tblparking.getSelectedRow();
 
     if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a parking transaction to timeout.", "No Selection", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Please select a flight ransaction to arrive.", "No Selection", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
     // Assuming 'id' is in column 0 of the table
     int parkingId = (int) tblparking.getValueAt(selectedRow, 0);
 
-    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "")) {
+    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/flights", "root", "")) {
 
-        String sql = "UPDATE parking_transactions SET status = ? WHERE id = ?";
+        String sql = "UPDATE flight SET status = ? WHERE id = ?";
         PreparedStatement pst = conn.prepareStatement(sql);
-        pst.setString(1, "Timed Out");  // new status
+        pst.setString(1, "Arrived");  // new status
         pst.setInt(2, parkingId);
 
         int affectedRows = pst.executeUpdate();
 
         if (affectedRows > 0) {
-            JOptionPane.showMessageDialog(this, "Parking transaction timed out successfully.");
+            JOptionPane.showMessageDialog(this, "Flight transaction Arrive successfully.");
             // Refresh the table data after update
             loadParkingTransactionsData();
         } else {
-            JOptionPane.showMessageDialog(this, "Failed to update the parking transaction.", "Update Failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to update the flight transaction.", "Update Failed", JOptionPane.ERROR_MESSAGE);
         }
 
     } catch (SQLException ex) {
